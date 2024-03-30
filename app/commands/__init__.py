@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 
 class Command(ABC):
+    """
+    Abstract base class for defining command objects.
+    """
     @abstractmethod
     def execute(self):
         """
@@ -20,7 +23,7 @@ class CommandHandler:
     """
     def __init__(self):
         """
-        Initialize the command handler with an empty dictionary to store commands.
+        Initialize the command handler.
         """
         self.commands = {}
 
@@ -32,6 +35,8 @@ class CommandHandler:
             command_name (str): Name of the command.
             command_class: Class representing the command.
         """
+        if not issubclass(command_class, Command):
+            raise ValueError("Command class must be a subclass of Command ABC.")
         self.commands[command_name] = command_class
 
     def execute_command(self, command_name: str, *args):
@@ -42,9 +47,8 @@ class CommandHandler:
             command_name (str): Name of the command to execute.
             *args: Optional arguments to pass to the command's execute method.
         """
-        try:
-            command_class = self.commands[command_name]
-            command_instance = command_class()
-            command_instance.execute(*args)
-        except KeyError:
+        if command_name not in self.commands:
             raise NoSuchCommandError(f"No such command: {command_name}")
+        command_class = self.commands[command_name]
+        command_instance = command_class()
+        command_instance.execute(*args)
