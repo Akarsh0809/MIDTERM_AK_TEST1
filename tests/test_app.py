@@ -2,46 +2,73 @@ import pytest
 from unittest.mock import MagicMock
 from app.commands import CommandHandler, Command, NoSuchCommandError
 
-# Define a mock command class for testing
 class MockCommand(Command):
+    """
+    Mock command class for testing purposes.
+    """
     def execute(self):
+        """
+        Mock execution method.
+        """
         return "Mock Command Executed"
+
 def test_register_command():
+    """
+    Test registering a command with the command handler.
+    """
     # Arrange
     handler = CommandHandler()
     mock_command = MockCommand()
+    
     # Act
     handler.register_command('mock', mock_command)
+    
     # Assert
     assert 'mock' in handler.commands
     assert handler.commands['mock'] == mock_command
+
 def test_execute_command_nonexistent():
+    """
+    Test executing a nonexistent command.
+    """
     # Arrange
     handler = CommandHandler()
+    
     # Act & Assert
     with pytest.raises(NoSuchCommandError):
         handler.execute_command('nonexistent')
+
 if __name__ == '__main__':
     pytest.main()
-
-
-
 
 import unittest
 from unittest.mock import patch, MagicMock
 from app.commands import Command, CommandHandler, NoSuchCommandError
 from app import App
+
 class MockCommand(Command):
+    """
+    Mock command class for testing purposes.
+    """
     def execute(self):
         pass
 
 class TestCommandHandler(unittest.TestCase):
+    """
+    Test cases for the CommandHandler class.
+    """
     def test_register_command(self):
+        """
+        Test registering a command with the CommandHandler.
+        """
         handler = CommandHandler()
         handler.register_command("mock_command", MockCommand)
         self.assertTrue("mock_command" in handler.commands)
 
     def test_execute_command(self):
+        """
+        Test executing a command with the CommandHandler.
+        """
         handler = CommandHandler()
         mock_command = MagicMock(spec=Command)
         handler.register_command("mock_command", mock_command)
@@ -49,7 +76,13 @@ class TestCommandHandler(unittest.TestCase):
         mock_command().execute.assert_called_once()
 
 class TestApp(unittest.TestCase):
+    """
+    Test cases for the App class.
+    """
     def test_get_environment_variable(self):
+        """
+        Test getting environment variable in the App class.
+        """
         app = App()
         self.assertEqual(app.getEnvironmentVariable(), "TESTING")
 
@@ -68,4 +101,3 @@ class TestApp(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
